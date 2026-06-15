@@ -37,4 +37,26 @@ where t.`year`= %s"""
         conn.close()
         return result
 
+    def getSalariesTeam(year, idMapTeams):
+        conn = DBConnect.get_connection()
+
+        result = []
+
+        cursor = conn.cursor(dictionary=True)
+        query = """select t.ID , t.teamCode ,sum(s.salary) as totSalary
+from salaries s , teams t , appearances a 
+where s.year=t.year  and t.`year` =a.`year` and a.`year`=%s
+and t.id=a.teamID and a.playerID =s.playerID 
+group by t.ID , t.teamCode  """
+        cursor.execute(query, (year,))
+
+        MapSalary={}
+        for row in cursor:
+            MapSalary[idMapTeams[row["ID"]]]=row["totSalary"] # chiave =team, valore= somma dei salari
+
+        cursor.close()
+        conn.close()
+        return result
+
+
 
