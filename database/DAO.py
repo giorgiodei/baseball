@@ -56,7 +56,7 @@ group by t.ID , t.teamCode  """
 
         cursor.close()
         conn.close()
-        return result
+        return MapSalary
 
 
 
